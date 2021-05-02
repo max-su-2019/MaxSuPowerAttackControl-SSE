@@ -22,18 +22,19 @@ namespace MaxSuPowerAttackControl
 				return true;
 			}
 		}
-		else
-			return _IsMoving(pc);
+		
+		return _IsMoving(pc);
 	}
 
 
 	float MovDirHook::GetMoveDir(RE::Actor* pc)
 	{
+
 		if (pc && pc->IsPlayerRef() && RE::ControlMap::GetSingleton()->IsMovementControlsEnabled() && pc->IsAttacking()) {
 			logger::debug(FMT_STRING("Reset Movement Direction Value to {}"), curDir);
 			return curDir;
 		}
 
-		return GetMoveDir(pc);
+		return _GetMoveDir(pc);
 	}
 }
