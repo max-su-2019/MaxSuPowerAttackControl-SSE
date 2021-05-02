@@ -45,10 +45,20 @@ namespace MaxSuPowerAttackControl
 
 		DireHandler& operator= (DireHandler&&) = delete;
 
+	//---------------------------------- For Keyboard---------------------------------------------------------------
 
 		MovDire							PickKeyDirection();															//	Pick the PowerAttack direction based on key pressed.
 		bool							GetKeyHeldDuration(const std::uint32_t a_index, float& result) const;		//	Get the held duration of a key
 		const std::optional<float>		GetKeyboardDireValue();
+
+	//--------------------------------------------------------------------------------------------------------------
+
+	
+	//---------------------------------- For GamePad---------------------------------------------------------------
+
+		const std::optional<float>		GetGamePadDireValue();
+
+	//--------------------------------------------------------------------------------------------------------------
 
 
 		const std::vector<DirePair> Directions
@@ -58,6 +68,8 @@ namespace MaxSuPowerAttackControl
 			DirePair(MovDire::kLeft,"Strafe Left"), 
 			DirePair(MovDire::kRight,"Strafe Right")
 		};
+
+		const float padThld = 0.25f;
 
 	};
 

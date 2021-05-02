@@ -63,16 +63,50 @@ namespace MaxSuPowerAttackControl
 
 
 
+	const std::optional<float> DireHandler::GetGamePadDireValue()
+	{
+		auto inputMgr = RE::BSInputDeviceManager::GetSingleton();
+
+		std::optional<float> result;
+		if (inputMgr && inputMgr->GetGamepad()) {
+			auto gamePad = (RE::BSWin32GamepadDevice*)(inputMgr->GetGamepad());
+
+			if (gamePad) {
+				logger::debug(FMT_STRING("Current LX is {}, Current LY is {}"), gamePad->curLX, gamePad->curLY);
+
+				float dir_xy[2] = { gamePad->curLX , gamePad->curLY };
+				static const float dir_base[2] = { 0, 1.0f };
+
+				float power = sqrt(std::powf(gamePad->curLX, 2) + std::powf(gamePad->curLY, 2));
+				logger::debug(FMT_STRING("Current Power is {}"), power);
+
+				float theta = (dir_xy[0] * dir_base[0] + dir_xy[1] * dir_base[1]) / sqrt(dir_xy[0] * dir_xy[0] + dir_xy[1] * dir_xy[1]) / sqrt(dir_base[0] * dir_base[0] + dir_base[1] * dir_base[1]);
+				theta = gamePad->curLX >= 0.f ? std::acos(theta) : -std::acos(theta);
+				logger::debug(FMT_STRING("theta is {}"), theta);
+
+				if (power > padThld)
+					result.emplace(theta);
+			}
+		}
+
+		return result;
+	}
+
+
 
 	bool DireHandler::ComputeDirectionValue(float& a_out)
 	{
+		std::optional<float> dire;
+
 		auto inputMgr = RE::BSInputDeviceManager::GetSingleton();
-		if (inputMgr && inputMgr->GetKeyboard() && inputMgr->GetKeyboard()->IsEnabled() && !inputMgr->IsGamepadConnected()) {
-			auto dire = GetKeyboardDireValue();
-			if (dire.has_value()) {
-				a_out = dire.value();
-				return true;
-			}
+		if (inputMgr && inputMgr->GetKeyboard() && inputMgr->GetKeyboard()->IsEnabled() && !inputMgr->IsGamepadConnected()) 
+			dire = GetKeyboardDireValue();
+		else if (inputMgr->IsGamepadConnected()) 
+			dire = GetGamePadDireValue();
+		
+		if (dire.has_value()) {
+			a_out = dire.value();
+			return true;
 		}
 
 		return false;
