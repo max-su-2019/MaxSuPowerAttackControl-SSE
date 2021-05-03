@@ -2,6 +2,27 @@
 
 namespace MaxSuPowerAttackControl
 {
+	template <class T>
+	struct FormPair
+	{
+	public:
+
+		FormPair(const RE::FormID thisID, const RE::BSFixedString thisName) :
+			formID(thisID), pluginName(thisName) {};
+
+		const RE::FormID			formID;
+		const RE::BSFixedString		pluginName;
+
+		T* GetForm()
+		{
+			if (pluginName.empty())
+				return RE::TESForm::LookupByID<T>(formID);
+			else
+				return RE::TESDataHandler::GetSingleton()->LookupForm<T>(formID, pluginName);
+		}
+	};
+
+
 	struct MovDires
 	{
 		enum MovDire : std::uint32_t
@@ -29,11 +50,14 @@ namespace MaxSuPowerAttackControl
 		}
 
 
-		bool ComputeDirectionValue(float& a_out);
+		bool UpdateDirectionValue();
+
+
+		std::unique_ptr<FormPair<RE::TESGlobal>>	direGlobal;
 
 	private:
 
-		DireHandler() = default;
+		DireHandler();
 
 		~DireHandler() = default;
 
@@ -45,18 +69,19 @@ namespace MaxSuPowerAttackControl
 
 		DireHandler& operator= (DireHandler&&) = delete;
 
+
 	//---------------------------------- For Keyboard---------------------------------------------------------------
 
 		MovDire							PickKeyDirection();															//	Pick the PowerAttack direction based on key pressed.
 		bool							GetKeyHeldDuration(const std::uint32_t a_index, float& result) const;		//	Get the held duration of a key
-		const std::optional<float>		GetKeyboardDireValue();
+		const float						GetKeyboardDireValue();
 
 	//--------------------------------------------------------------------------------------------------------------
 
 	
 	//---------------------------------- For GamePad---------------------------------------------------------------
 
-		const std::optional<float>		GetGamePadDireValue();
+		const float		GetGamePadDireValue();
 
 	//--------------------------------------------------------------------------------------------------------------
 
@@ -69,10 +94,8 @@ namespace MaxSuPowerAttackControl
 			DirePair(MovDire::kRight,"Strafe Right")
 		};
 
-		const float padThld = 0.25f;
+		const float	padThld = 0.25f;
 
 	};
-
-
 
 }

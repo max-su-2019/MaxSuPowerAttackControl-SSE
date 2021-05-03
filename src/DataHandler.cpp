@@ -2,6 +2,16 @@
 
 namespace MaxSuPowerAttackControl
 {
+#define SETTINGFILE_PATH "Data\\SKSE\\Plugins\\MaxsuPowerAttackControl.ini"
+
+	DireHandler::DireHandler()
+	{
+		static const std::string PluginName = "Maxsu_PowerAttackControl.esp";
+
+		direGlobal	= std::make_unique<FormPair<RE::TESGlobal>>(0xD61, PluginName);
+	}
+
+
 
 	bool DireHandler::GetKeyHeldDuration(const std::uint32_t a_index, float& result) const
 	{
@@ -14,7 +24,6 @@ namespace MaxSuPowerAttackControl
 
 		return false;
 	}
-
 
 	MovDire DireHandler::PickKeyDirection()
 	{
@@ -37,37 +46,44 @@ namespace MaxSuPowerAttackControl
 		return pickedDir.has_value() ? pickedDir.value() : MovDire::kNone;
 	}
 
-
-	const std::optional<float> DireHandler::GetKeyboardDireValue()
+	const float DireHandler::GetKeyboardDireValue()
 	{
-		static const float PI = 3.1415927f;
-
-		const std::optional<float> null;
 		switch (PickKeyDirection()){
 		case MovDire::kForward:
-			return 0.f;
-
-		case MovDire::kBackward:
-			return PI;
-
-		case MovDire::kLeft:
-			return -(PI / 2.0f);
+			return 1.f;
 
 		case MovDire::kRight:
-			return PI / 2.0f;
+			return 2.f;
+
+		case MovDire::kBackward:
+			return 3.f;
+
+		case MovDire::kLeft:
+			return 4.f;
 
 		default:
-			return null;
+			return 0.f;
 		}
 	}
 
 
 
-	const std::optional<float> DireHandler::GetGamePadDireValue()
+
+	static float NormalAbsoluteAngle(float angle)
+	{
+		static const float PI = 3.1415927f;
+
+		while (angle < 0)
+			angle += 2 * PI;
+		while (angle > 2 * PI)
+			angle -= 2 * PI;
+		return angle;
+	}
+
+	const float DireHandler::GetGamePadDireValue()
 	{
 		auto inputMgr = RE::BSInputDeviceManager::GetSingleton();
 
-		std::optional<float> result;
 		if (inputMgr && inputMgr->GetGamepad()) {
 			auto gamePad = (RE::BSWin32GamepadDevice*)(inputMgr->GetGamepad());
 
@@ -84,17 +100,28 @@ namespace MaxSuPowerAttackControl
 				theta = gamePad->curLX >= 0.f ? std::acos(theta) : -std::acos(theta);
 				logger::debug(FMT_STRING("theta is {}"), theta);
 
+				auto dir = NormalAbsoluteAngle(theta);
+				dir /= 6.283185f;
+				dir += 0.125f;
+				dir *= 4.0f;
+				dir = fmod(dir, 4.0f);
+				dir = floor(dir);
+				dir += 1.0f;
+				logger::debug(FMT_STRING("GamePad Direction is {}"), dir);
+
 				if (power > padThld)
-					result.emplace(theta);
+					return dir;
 			}
 		}
 
-		return result;
+		return 0.f;
 	}
 
 
 
-	bool DireHandler::ComputeDirectionValue(float& a_out)
+
+
+	bool DireHandler::UpdateDirectionValue()
 	{
 		std::optional<float> dire;
 
@@ -104,8 +131,10 @@ namespace MaxSuPowerAttackControl
 		else if (inputMgr->IsGamepadConnected()) 
 			dire = GetGamePadDireValue();
 		
-		if (dire.has_value()) {
-			a_out = dire.value();
+		auto global = direGlobal->GetForm();
+		if (dire.has_value() && global) {
+			global->value = dire.value();
+			logger::debug(FMT_STRING("Set Direction to {}"), dire.value());
 			return true;
 		}
 

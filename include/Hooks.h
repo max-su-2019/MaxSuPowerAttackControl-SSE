@@ -3,34 +3,22 @@
 
 namespace MaxSuPowerAttackControl
 {
-	class MovDirHook
+	class AttackHook
 	{
 	public:
-		static void HookGetMoveDir()
-		{
-			logger::debug("Hook Get Player Movement Direction!");
-			REL::Relocation<std::uintptr_t> GetMoveDirBase{ REL::ID(21236) };
-			auto& trampoline = SKSE::GetTrampoline();
-			_GetMoveDir = trampoline.write_call<5>(GetMoveDirBase.address() + 0x4F, GetMoveDir);
-		}
 
-		static void HookIsMoving()
+		static void HookPowerAttack()
 		{
-			logger::debug("Hook IsMoving!");
-			REL::Relocation<std::uintptr_t> GetMoveDirBase{ REL::ID(21236) };
-			auto& trampoline = SKSE::GetTrampoline();
-			_IsMoving = trampoline.write_call<5>(GetMoveDirBase.address() + 0x2D, IsMoving);
+			REL::Relocation<std::uintptr_t> AttackBlockHandlerVtbl{ RE::Offset::AttackBlockHandler::Vtbl };
+			_ProcessAttackHook = AttackBlockHandlerVtbl.write_vfunc(0x4, ProcessAttackHook);
+			logger::info("Hook Power Attack Control!");
 		}
-
 
 	private:
 
-		static float	GetMoveDir(RE::Actor* pc);
-		static bool		IsMoving(RE::Actor* pc);
+		static bool		ProcessAttackHook(RE::AttackBlockHandler* handler, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data);
 
-
-		static inline REL::Relocation<decltype(GetMoveDir)>		 _GetMoveDir;
-		static inline REL::Relocation<decltype(IsMoving)>		 _IsMoving;
+		static inline REL::Relocation<decltype(ProcessAttackHook)> _ProcessAttackHook;
 	};
 
 
