@@ -1,5 +1,5 @@
 ﻿#include "version.h"
-#include "Hooks.h"
+#include "LoadGame.h"
 
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
 {
@@ -49,19 +49,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a
 
 
 
-void EventCallback(SKSE::MessagingInterface::Message* msg)
-{
-	if (msg->type == SKSE::MessagingInterface::kDataLoaded)
-	{
-		logger::info("Data Load CallBack Trigger!");
 
-		if (MaxSuPowerAttackControl::DireHandler::GetSingleton()->direGlobal->GetForm())
-			MaxSuPowerAttackControl::AttackHook::HookPowerAttack();
-		else
-			logger::error("Fail to Load Direction Control Global Variable!");
-
-	}
-}
 
 
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
@@ -79,7 +67,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 
 	SKSE::AllocTrampoline(1 << 4);
 
-	if (g_message->RegisterListener(EventCallback))
+	if (g_message->RegisterListener(MaxSuPowerAttackControl::EventCallback))
 	{
 		logger::info("Register Event Call Back!");
 		return true;

@@ -52,8 +52,7 @@ namespace MaxSuPowerAttackControl
 
 		bool UpdateDirectionValue();
 
-
-		std::unique_ptr<FormPair<RE::TESGlobal>>	direGlobal;
+		std::unique_ptr<FormPair<RE::TESGlobal>> direGlobal;
 
 	private:
 
@@ -68,7 +67,6 @@ namespace MaxSuPowerAttackControl
 		DireHandler& operator= (const DireHandler&) = delete;
 
 		DireHandler& operator= (DireHandler&&) = delete;
-
 
 	//---------------------------------- For Keyboard---------------------------------------------------------------
 
@@ -94,8 +92,7 @@ namespace MaxSuPowerAttackControl
 			DirePair(MovDire::kRight,"Strafe Right")
 		};
 
-		const float	padThld = 0.25f;
-
+		float padThld = 0.25f;
 	};
 
 }

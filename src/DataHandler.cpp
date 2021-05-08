@@ -2,16 +2,6 @@
 
 namespace MaxSuPowerAttackControl
 {
-#define SETTINGFILE_PATH "Data\\SKSE\\Plugins\\MaxsuPowerAttackControl.ini"
-
-	DireHandler::DireHandler()
-	{
-		static const std::string PluginName = "Maxsu_PowerAttackControl.esp";
-
-		direGlobal	= std::make_unique<FormPair<RE::TESGlobal>>(0xD61, PluginName);
-	}
-
-
 
 	bool DireHandler::GetKeyHeldDuration(const std::uint32_t a_index, float& result) const
 	{
@@ -31,7 +21,6 @@ namespace MaxSuPowerAttackControl
 
 		std::optional<MovDire> pickedDir;
 		float recordDur = 0.f;
-
 		for (auto dir : Directions) {
 			auto key = ctrlMap->GetMappedKey(dir.second, RE::INPUT_DEVICE::kKeyboard);
 

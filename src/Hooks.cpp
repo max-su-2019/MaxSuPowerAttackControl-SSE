@@ -1,10 +1,12 @@
 #include "Hooks.h"
+#include "DataHandler.h"
 
 namespace MaxSuPowerAttackControl
 {
 	 bool AttackHook::ProcessAttackHook(RE::AttackBlockHandler* handler, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
-		if (handler->IsInputEventHandlingEnabled() && RE::ControlMap::GetSingleton()->IsFightingControlsEnabled() && a_event && a_event->QUserEvent() == RE::UserEvents::GetSingleton()->rightAttack) {
+		if (handler->IsInputEventHandlingEnabled() && RE::ControlMap::GetSingleton()->IsFightingControlsEnabled() && a_event && 
+			( a_event->QUserEvent() == RE::UserEvents::GetSingleton()->rightAttack || a_event->QUserEvent() == RE::UserEvents::GetSingleton()->leftAttack)) {
 			logger::debug("Process Attack Hook Start!");
 			if (DireHandler::GetSingleton()->UpdateDirectionValue())
 				logger::debug("Update Direction Value Successfully!");

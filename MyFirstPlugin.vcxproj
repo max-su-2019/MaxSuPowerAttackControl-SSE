@@ -184,8 +184,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(Skyrim64Path)\Data\SKSE\Plugins\$(TargetFileName)" /Y</Command>
-      <Message>Copy the compiled dll to the Skyrim directory</Message>
+      <Command>copy "$(TargetPath)" "C:\Users\Administrator\AppData\Local\ModOrganizer\SkyrimSE\mods\Better PowerAttack Control\SKSE\Plugins" /Y</Command>
+      <Message>Copy the compiled dll to the MO2 directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -215,13 +215,14 @@
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(Skyrim64Path)\Data\SKSE\Plugins\$(TargetFileName)" /Y</Command>
-      <Message>Copy the compiled dll to the Skyrim directory</Message>
+      <Command>copy "$(TargetPath)" "C:\Users\Administrator\AppData\Local\ModOrganizer\SkyrimSE\mods\Better PowerAttack Control\SKSE\Plugins" /Y</Command>
+      <Message>Copy the compiled dll to the MO2 directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\DataHandler.cpp" />
     <ClCompile Include="src\Hooks.cpp" />
+    <ClCompile Include="src\LoadGame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -237,6 +238,7 @@
   <ItemGroup>
     <ClInclude Include="include\DataHandler.h" />
     <ClInclude Include="include\Hooks.h" />
+    <ClInclude Include="include\LoadGame.h" />
     <ClInclude Include="src\PCH.h" />
     <ClInclude Include="src\version.h" />
   </ItemGroup>
