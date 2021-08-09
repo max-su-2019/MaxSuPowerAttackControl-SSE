@@ -119,6 +119,13 @@ namespace MaxSuPowerAttackControl
 			dire = GetKeyboardDireValue();
 		else if (inputMgr->IsGamepadConnected()) 
 			dire = GetGamePadDireValue();
+
+		auto enable_tdm = RE::TESForm::LookupByEditorID<RE::TESGlobal>("TDM_DirectionalMovement");
+
+		if (enable_tdm && enable_tdm->value && dire.has_value() && dire > 0.f) {
+			dire = 1.0f;
+			logger::debug("TDM Install, Force to Forward Attack!");
+		}
 		
 		auto global = direGlobal->GetForm();
 		if (dire.has_value() && global) {

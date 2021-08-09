@@ -98,10 +98,10 @@
     <VcpkgTriplet>$(VcpkgUserTriplet)-custom</VcpkgTriplet>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <VcpkgTriplet>$(VcpkgUserTriplet)-static-md</VcpkgTriplet>
+    <VcpkgTriplet>x64-windows-static-md</VcpkgTriplet>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgTriplet>$(VcpkgUserTriplet)-static-md</VcpkgTriplet>
+    <VcpkgTriplet>x64-windows-static-md</VcpkgTriplet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -184,7 +184,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "C:\Users\Administrator\AppData\Local\ModOrganizer\SkyrimSE\mods\Better PowerAttack Control\SKSE\Plugins" /Y</Command>
+      <Command>copy "$(TargetPath)" "E:\Mod Organizer 2\mods\Better Power Attack Direction Control\SKSE\Plugins" /Y</Command>
       <Message>Copy the compiled dll to the MO2 directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -215,7 +215,7 @@
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "C:\Users\Administrator\AppData\Local\ModOrganizer\SkyrimSE\mods\Better PowerAttack Control\SKSE\Plugins" /Y</Command>
+      <Command>copy "$(TargetPath)" "E:\Mod Organizer 2\mods\Better Power Attack Direction Control\SKSE\Plugins" /Y</Command>
       <Message>Copy the compiled dll to the MO2 directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
